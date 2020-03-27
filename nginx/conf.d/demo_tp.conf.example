@@ -1,0 +1,24 @@
+server {
+    listen 80;
+
+    server_name crm.mjngs.cc fx.mjngs.cc op.mjngs.cc admin.mjngs.cc crmapi.mjngs.cc cron.mjngs.cc pub.mjngs.cc finance.mjngs.cc vip.mjngs.cc wx.mjngs.cc service.mjngs.cc pro.mjngs.cc ngs.mjngs.cc biz.mjngs.cc;
+    root /var/www/mjngs/Public;
+    index index.html index.php;
+
+    location / {
+        if (!-e $request_filename) {
+            rewrite ^/(.*)$ /index.php/$1 last;
+        }
+    }
+
+    location ~ ^(.+\.php)(.*)$ {
+        fastcgi_pass php:9000;
+        fastcgi_split_path_info ^(.+\.php)(.*)$;
+        fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+        fastcgi_param PATH_INFO $fastcgi_path_info;
+        include fastcgi_params;
+    }
+
+    access_log /var/log/nginx/demo_access.log main;
+    error_log /var/log/nginx/demo_error.log error;
+}
