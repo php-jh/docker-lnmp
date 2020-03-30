@@ -1,6 +1,6 @@
 module.exports = {
   // 管理员账号，管理员默认密码是 ymfe.org，不可配置，请安装完成后自行登录修改
-  adminAccount: 'admin@majorbio.com',
+  adminAccount: 'admin@qq.com',
 
   // MongoDB 数据库配置
   db: {
