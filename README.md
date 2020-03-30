@@ -12,7 +12,7 @@ sudo apt install docker-ce
 
 # 新建or编辑 /etc/docker/daemon.json
 {
-  "registry-mirrors": ["https://kv0xg7tt.mirror.aliyuncs.com"]
+  "registry-mirrors": ["https://9jp0b2sv.mirror.aliyuncs.com"]
 }
 
 # 安装docker-compose
@@ -33,7 +33,7 @@ sudo gpasswd -a 用户 docker
 
 # Docker for Windows
 
-# 设置阿里云的源 https://kv0xg7tt.mirror.aliyuncs.com
+# 设置阿里云的源 https://9jp0b2sv.mirror.aliyuncs.com
 ```
 
 # 二、运行 docker
@@ -45,7 +45,7 @@ sudo gpasswd -a 用户 docker
 /x/www
 
 # 在路径 /x 下 git 【 请注意：是 http 】
-git clone http://git.i-sanger.com/a/dp72dev.git
+git clone xxxx
 
 # 复制 .env 文件
 cd /x/dp72dev
