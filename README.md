@@ -132,3 +132,8 @@ Zend OPcache、 zip、 zlib
 Xdebug
 Zend OPcache
 ```
+
+# yapi的使用访问地址
+0.0.0.0:40001 
+账号：admin@qq.com（修改账号 在 yapi/conf.js）
+密码:ymfe.org
