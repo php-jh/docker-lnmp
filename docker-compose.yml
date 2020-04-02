@@ -1,0 +1,137 @@
+version: '2'
+
+networks:
+  frontend:
+    driver: bridge
+  backend:
+    driver: bridge
+
+volumes:
+  dv_mysql:
+    driver: local
+  dv_mongo:
+    driver: local
+  dv_redis:
+    driver: local
+
+services:
+  php:
+    build:
+      context: ./php
+      args:
+        - GIT_LOGIN_ACCOUNT=${PHP_GIT_LOGIN_ACCOUNT}
+        - GIT_LOGIN_TOKEN=${PHP_GIT_LOGIN_TOKEN}
+        - GIT_USER_NAME=${PHP_GIT_USER_NAME}
+        - GIT_USER_EMAIL=${PHP_GIT_USER_EMAIL}
+        - XDEBUG_REMOTE_HOST=${HOST}
+    extra_hosts:
+      - "demo.docker.com : ${HOST}"
+    volumes:
+      - ${WORKER_DIR}:/var/www
+    ports:
+      - 8280:8280
+      - 8282:8282
+    depends_on:
+      - mysql
+      - redis
+      - mongo
+      - memcached
+    networks:
+      - backend
+
+  php74:
+    build:
+      context: ./php74
+    extra_hosts:
+      - "demo.docker.com : ${HOST}"
+    volumes:
+      - ${WORKER_DIR}:/var/www
+    depends_on:
+      - mysql
+      - redis
+      - mongo
+      - memcached
+    ports:
+      - 8281:8280
+      - 8283:8282
+    networks:
+      - backend
+
+  php56:
+    build:
+      context: ./php56
+    extra_hosts:
+      - "demo.docker.com : ${HOST}"
+    volumes:
+      - ${WORKER_DIR}:/var/www
+    depends_on:
+      - mysql
+      - redis
+      - mongo
+      - memcached
+    networks:
+      - backend
+
+  nginx:
+    build: ./nginx
+    volumes:
+      - ${WORKER_DIR}:/var/www
+      - ./logs/nginx:/var/log/nginx
+      - ./nginx/conf.d:/etc/nginx/conf.d
+    ports:
+      - 80:80
+    depends_on:
+      - php
+      - php74
+      - php56
+    networks:
+      - frontend
+      - backend
+
+  mysql:
+    build: ./mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=123123
+    volumes:
+      - dv_mysql:/var/lib/mysql
+      - ${WORKER_DIR}:/var/www
+    ports:
+      - 3306:3306
+    networks:
+      - backend
+
+  mongo:
+    build: ./mongo
+    ports:
+      - 27017:27017
+    volumes:
+      - dv_mongo:/data/db
+    networks:
+      - backend
+
+  redis:
+    build: ./redis
+    volumes:
+      - dv_redis:/data
+    ports:
+      - 6379:6379
+    networks:
+      - backend
+
+  memcached:
+    image: memcached:latest
+    ports:
+      - 11211:11211
+    networks:
+      - backend
+
+  yapi-web:
+    image: jayfong/yapi:latest
+    ports:
+      - 40001:3000
+    volumes:
+      - ./yapi/config.js:/yapi/config.js
+    depends_on:
+      - mongo
+    networks:
+      - backend

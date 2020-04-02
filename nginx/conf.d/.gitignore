@@ -1,0 +1,4 @@
+*
+!.gitignore
+!demo_laravel.conf.example
+!demo_tp.conf.example
