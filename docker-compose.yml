@@ -25,7 +25,7 @@ services:
         - GIT_USER_EMAIL=${PHP_GIT_USER_EMAIL}
         - XDEBUG_REMOTE_HOST=${HOST}
     extra_hosts:
-      - "demo.docker.com : ${HOST}"
+      - "demo.com : ${HOST}"
     volumes:
       - ${WORKER_DIR}:/var/www
     ports:
@@ -39,11 +39,26 @@ services:
     networks:
       - backend
 
+  php56:
+    build:
+      context: ./php56
+    extra_hosts:
+      - "demo.com : ${HOST}"
+    volumes:
+      - ${WORKER_DIR}:/var/www
+    depends_on:
+      - mysql
+      - redis
+      - mongo
+      - memcached
+    networks:
+      - backend
+
   php74:
     build:
       context: ./php74
     extra_hosts:
-      - "demo.docker.com : ${HOST}"
+      - "demo.com : ${HOST}"
     volumes:
       - ${WORKER_DIR}:/var/www
     depends_on:
@@ -57,20 +72,6 @@ services:
     networks:
       - backend
 
-  php56:
-    build:
-      context: ./php56
-    extra_hosts:
-      - "demo.docker.com : ${HOST}"
-    volumes:
-      - ${WORKER_DIR}:/var/www
-    depends_on:
-      - mysql
-      - redis
-      - mongo
-      - memcached
-    networks:
-      - backend
 
   nginx:
     build: ./nginx
@@ -83,7 +84,6 @@ services:
     depends_on:
       - php
       - php74
-      - php56
     networks:
       - frontend
       - backend
@@ -122,16 +122,5 @@ services:
     image: memcached:latest
     ports:
       - 11211:11211
-    networks:
-      - backend
-
-  yapi-web:
-    image: jayfong/yapi:latest
-    ports:
-      - 40001:3000
-    volumes:
-      - ./yapi/config.js:/yapi/config.js
-    depends_on:
-      - mongo
     networks:
       - backend
